@@ -1,35 +1,137 @@
-import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
+// // Polyfill `global` cho sockjs-client khi chạy trong browser (Vite/ESM)
+// if (typeof (window as any).global === "undefined") {
+//   (window as any).global = window;
+// }
 
-// 1. Khởi tạo kết nối SockJS (phải đúng URL /ws bạn đã cấu hình)
-const socket = new SockJS('http://localhost:8080/ws');
+// import SockJS from "sockjs-client";
+// import Stomp from "stompjs";
 
-// 2. Bọc SockJS vào STOMP client
-const stompClient = Stomp.over(socket);
+// export type MenuItemStatusMessage = {
+//   itemId: number;
+//   itemName: string;
+//   status: string;
+// };
 
-// 3. Kết nối và xử lý
-const connect = (token) => {
-    const headers = {
-        'Authorization': `Bearer ${token}` // Truyền JWT vào đây
-    };
+// type MenuStatusCallback = (message: MenuItemStatusMessage) => void;
 
-    stompClient.connect(headers, (frame) => {
-        console.log('Connected: ' + frame);
+// let socket: any = null;
+// let stompClient: any = null;
 
-        // 4. Đăng ký lắng nghe kênh (Topic)
-        stompClient.subscribe('/topic/menu-item-status', (message) => {
-            if (message.body) {
-                const updatedItem = JSON.parse(message.body);
-                console.log('Nhận thông báo mới:', updatedItem);
-                
-                // Cập nhật giao diện (UI) tại đây
-                alert(`Món ${updatedItem.itemName} hiện đã ${updatedItem.status}`);
-            }
-        });
-    }, (error) => {
-        console.error('Lỗi kết nối STOMP:', error);
-    });
+// export function connectWebSocket(
+//   token: string | null,
+//   onMessage: MenuStatusCallback,
+// ) {
+//   disconnectWebSocket();
+
+//   socket = new SockJS("/ws");
+//   console.log(token);
+//   stompClient = Stomp.over(socket);
+//   stompClient.debug = () => undefined;
+
+//   const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+//   stompClient.connect(
+//     headers,
+//     () => {
+//       stompClient?.subscribe(
+//         "/topic/menu-item-status",
+//         (message: { body?: string }) => {
+//           if (message.body) {
+//             onMessage(JSON.parse(message.body) as MenuItemStatusMessage);
+//           }
+//         },
+//       );
+//     },
+//     (error: unknown) => {
+//       console.error("WebSocket connection error:", error);
+//     },
+//   );
+// }
+
+// export function disconnectWebSocket() {
+//   if (stompClient) {
+//     try {
+//       stompClient.disconnect();
+//     } catch {
+//       // Ignore disconnect errors while cleaning up.
+//     }
+//     stompClient = null;
+//   }
+
+//   if (socket) {
+//     socket.close();
+//     socket = null;
+//   }
+// }
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+
+export type MenuItemStatusMessage = {
+  itemId: number;
+  itemName: string;
+  status: string;
 };
 
-// Gọi hàm kết nối
-connect("your_jwt_token_here");
+type MenuStatusCallback = (message: MenuItemStatusMessage) => void;
+
+let socket: any = null;
+let stompClient: any = null;
+
+export function connectWebSocket(
+  token: string | null,
+  onMessage: MenuStatusCallback,
+): void {
+  disconnectWebSocket();
+
+  // Khởi tạo kết nối SockJS (WebSocket không qua Vite proxy, cần dùng trực tiếp BE URL)
+  const beUrl = "http://localhost:8080";
+  socket = new SockJS(`${beUrl}/ws`);
+  stompClient = Stomp.over(socket);
+  stompClient.debug = () => undefined; // Tắt debug messages
+
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+  stompClient.connect(
+    headers,
+    () => {
+      console.log("Connected to WebSocket");
+
+      // Đăng ký lắng nghe kênh (Topic)
+      stompClient?.subscribe(
+        "/topic/menu-item-status",
+        (message: { body?: string }) => {
+          if (message.body) {
+            try {
+              const updatedItem = JSON.parse(
+                message.body,
+              ) as MenuItemStatusMessage;
+              console.log("Nhận thông báo mới:", updatedItem);
+              onMessage(updatedItem);
+            } catch (error) {
+              console.error("Lỗi parse message:", error);
+            }
+          }
+        },
+      );
+    },
+    (error: unknown) => {
+      console.error("Lỗi kết nối WebSocket:", error);
+    },
+  );
+}
+
+export function disconnectWebSocket(): void {
+  if (stompClient) {
+    try {
+      stompClient.disconnect();
+    } catch {
+      // Bỏ qua lỗi cleanup
+    }
+    stompClient = null;
+  }
+
+  if (socket) {
+    socket.close();
+    socket = null;
+  }
+}

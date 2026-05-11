@@ -259,11 +259,15 @@ export default function Users() {
                 </div>
                 <form className="space-y-4">
                   <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Mật khẩu hiện tại</label>
+                    <input type="password" placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500 outline-none transition-all text-sm" />
+                  </div>
+                  <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Mật khẩu mới</label>
                     <input type="password" placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500 outline-none transition-all text-sm" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Xác nhận mật khẩu</label>
+                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400">Xác nhận mật khẩu mới</label>
                     <input type="password" placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-4 focus:ring-orange-500/5 focus:border-orange-500 outline-none transition-all text-sm" />
                   </div>
                   <button className="w-full py-4 bg-orange-500 text-white rounded-2xl font-black shadow-lg shadow-orange-500/20 hover:opacity-95 transition-all">

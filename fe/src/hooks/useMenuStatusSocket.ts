@@ -8,14 +8,22 @@ status: string;
 };
 
 export const useMenuStatusSocket = (token: string | null) => {
-const [lastUpdate, setLastUpdate] = useState<MenuItemStatusMessage | null>(null);
+	const [lastUpdate, setLastUpdate] = useState<MenuItemStatusMessage | null>(null);
 
-useEffect(() => {
-connectWebSocket(token, (message) => {
-setLastUpdate(message as MenuItemStatusMessage);
-});
+	useEffect(() => {
+		if (!token) {
+			disconnectWebSocket();
+			return;
+		}
 
-}, [token]);
+		connectWebSocket(token, (message) => {
+			setLastUpdate(message as MenuItemStatusMessage);
+		});
 
-return lastUpdate;
+		return () => {
+			disconnectWebSocket();
+		};
+	}, [token]);
+
+	return lastUpdate;
 };
