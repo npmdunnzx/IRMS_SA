@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: RestaurantManagementSystem
+
+  datasource:
+    url: <url>
+    username: <username>
+    password: <password>
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+jwt:
+  secret: <secret-key>
+
+seeder:
+  admin:
+    email: <email>
+    password: <password>

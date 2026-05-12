@@ -4,7 +4,7 @@ import com.blue.rms.auth.dto.AuthenticatedUserDto
 import com.blue.rms.user.dto.CreateUserRequest
 import com.blue.rms.auth.dto.LoginRequest
 import com.blue.rms.auth.dto.RegisterRequest
-import com.blue.rms.auth.dto.UserDto
+import com.blue.rms.user.dto.UserDto
 import com.blue.rms.auth.service.AuthService
 import com.blue.rms.auth.service.impl.AuthServiceImpl
 import io.swagger.v3.oas.annotations.Operation

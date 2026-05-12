@@ -22,7 +22,9 @@ class AdminSeeder(
                 UserEntity(
                     email = email,
                     hashedPassword = passwordEncoder.encodePassword(password)!!,
-                    role = UserRole.ADMIN
+                    role = UserRole.ADMIN,
+                    firstName = "Admin",
+                    lastName = "Account",
                 )
             )
         }

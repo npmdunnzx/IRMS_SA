@@ -9,5 +9,9 @@ data class CreateUserRequest(
     val email: String,
     @field:NotBlank
     val password: String,
-    val role: UserRole
+    val role: UserRole,
+    @field:NotBlank
+    val firstName: String,
+    @field:NotBlank
+    val lastName: String,
 )

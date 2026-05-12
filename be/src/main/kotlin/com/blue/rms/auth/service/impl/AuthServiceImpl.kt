@@ -2,15 +2,14 @@ package com.blue.rms.auth.service.impl
 
 import com.blue.rms.config.security.PasswordEncoder
 import com.blue.rms.auth.dto.AuthenticatedUserDto
-import com.blue.rms.auth.dto.UserDto
-import com.blue.rms.user.entity.UserEntity
-import com.blue.rms.auth.mapper.toUserDto
+import com.blue.rms.user.mapper.toUserDto
 import com.blue.rms.user.repository.UserRepository
 import com.blue.rms.auth.service.AuthService
 import com.blue.rms.auth.service.JwtService
+import com.blue.rms.exception.ForbiddenException
 import com.blue.rms.exception.InvalidCredentialsException
-import com.blue.rms.exception.UserAlreadyExistsException
 import com.blue.rms.exception.UserNotFoundException
+import com.blue.rms.user.util.enums.UserStatus
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,25 +18,6 @@ class AuthServiceImpl(
     private val jwtService: JwtService,
     private val userRepository: UserRepository
 ): AuthService {
-
-    fun register(
-        email: String,
-        password: String,
-    ): UserDto {
-        val trimmedEmail = email.trim()
-        val user = userRepository.findByEmail(trimmedEmail)
-
-        if(user != null) {
-            throw UserAlreadyExistsException()
-        }
-
-        return userRepository.save(
-            UserEntity(
-                email = trimmedEmail,
-                hashedPassword = passwordEncoder.encodePassword(password) ?: password
-            )
-        ).toUserDto()
-    }
 
     override fun login(
         email: String,
@@ -48,6 +28,10 @@ class AuthServiceImpl(
 
         if(!passwordEncoder.matches(password, user.hashedPassword)) {
             throw InvalidCredentialsException()
+        }
+
+        if(user.status == UserStatus.INACTIVE) {
+            throw ForbiddenException("Your account is inactive")
         }
 
         return user.id?.let {

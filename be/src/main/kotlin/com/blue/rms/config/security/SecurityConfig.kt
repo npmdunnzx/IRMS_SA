@@ -4,6 +4,7 @@ import jakarta.servlet.DispatcherType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -29,13 +30,7 @@ class SecurityConfig {
                         "/swagger-ui/**",
                         "/v3/api-docs/**"
                     ).permitAll()
-                    .requestMatchers(
-                        "/api/dish/**",
-                        "/api/combo/**",
-                        "/api/menu/**",
-                        "/api/category/**",
-                        "/api/option-group/**"
-                    ).permitAll()
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/ws/**").permitAll()
                     .requestMatchers("/api/auth/**")
                     .permitAll()

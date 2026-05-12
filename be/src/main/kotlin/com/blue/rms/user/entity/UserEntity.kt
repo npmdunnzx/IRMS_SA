@@ -1,6 +1,7 @@
 package com.blue.rms.user.entity
 
 import com.blue.rms.user.util.enums.UserRole
+import com.blue.rms.user.util.enums.UserStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -30,10 +31,16 @@ class UserEntity(
     var email: String,
     @Column(nullable = false)
     var hashedPassword: String,
+    @Column(nullable = false)
+    var firstName: String,
+    @Column(nullable = false)
+    var lastName: String,
 //    @Column(nullable = false)
 //    var hasVerifiedEmail: Boolean = false,
     @Enumerated(EnumType.STRING)
     var role: UserRole = UserRole.STAFF,
+    @Enumerated(EnumType.STRING)
+    var status: UserStatus = UserStatus.ACTIVE,
     @CreationTimestamp
     var createdAt: Instant = Instant.now(),
     @UpdateTimestamp
