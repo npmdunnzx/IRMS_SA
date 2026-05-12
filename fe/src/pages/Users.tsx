@@ -174,7 +174,6 @@ export default function Users() {
       else {
         url = `http://localhost:8080/api/user?page=${pageNumber}&size=10&sort=desc`;
       }
-      console.log(url);
       const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -189,8 +188,16 @@ export default function Users() {
         throw new Error(data.message || 'Lấy danh sách người dùng thất bại');
       }
 
-      setUsers(data.content);
-      setPage(data.page);
+      const content = Array.isArray(data.content) ? data.content : [];
+      const pageData = data.page ?? data;
+
+      setUsers(content);
+      setPage({
+        size: pageData.size ?? 10,
+        number: pageData.number ?? pageNumber,
+        totalElements: pageData.totalElements ?? content.length,
+        totalPages: pageData.totalPages ?? 0,
+      });
     } catch (err) {
       console.error(err);
     } finally {
