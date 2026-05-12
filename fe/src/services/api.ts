@@ -33,7 +33,7 @@ export async function request<T>(
   options: RequestOptions = {},
 ): Promise<T> {
   const headers = new Headers(options.headers);
-  localStorage.setItem("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyYTA4ZTA5MS04NDYyLTRiMDgtOGE3NC1jYWRkNmQ3M2NlYjciLCJ0eXBlIjoiYWNjZXNzIiwicm9sZSI6Ik1BTkFHRVIiLCJpYXQiOjE3NzgzMjk2MzAsImV4cCI6MTc4MDkyMTYzMH0.cZvXkIJjt2IggIstN2hEVEwSoUzz_lmWNEVD0FLVZmQ");
+  localStorage.setItem("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJmNWVmMGQwMC0zZjUwLTQzYjQtOGJlZi01MWJiODQ0NWE5Y2MiLCJ0eXBlIjoiYWNjZXNzIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc4MDcyODg0LCJleHAiOjE3ODA2NjQ4ODR9.-rG4dho4m-q6sojAeAKIZK9M2wwoyDBPCMcT3akVgo8");
   const token = localStorage.getItem("accessToken");
 
   if (options.auth !== false && token) {

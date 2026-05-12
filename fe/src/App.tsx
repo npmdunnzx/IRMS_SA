@@ -7,6 +7,7 @@ import Tables from "./pages/Tables";
 import Reports from "./pages/Reports";
 import Users from "./pages/Users";
 import Layout from "./components/Layout";
+import Setting from "./pages/Setting";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/users" element={<Users />} />
 
           <Route path="/orders" element={<Tables />} />
+          <Route path="/settings" element={<Setting />} />
         </Route>
 
 
